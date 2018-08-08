@@ -1,36 +1,36 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
-// SpMV calculation sample code. 
+// SpMV calculation sample code.
 //
-// This code run Sparse Matrix Vector product and measure the calculation time. 
-// The matrix data structure mimic the stiffness matrix used in Finite Element Method. 
-// Calculation model is a cube, divided by hexa linear elements. 
-// Each edge is divided as nnodes_edge nodes. 
-// 
+// This code run Sparse Matrix Vector product and measure the calculation time.
+// The matrix data structure mimic the stiffness matrix used in Finite Element Method.
+// Calculation model is a cube, divided by hexa linear elements.
+// Each edge is divided as nnodes_edge nodes.
+//
 // Usage: //////////////////////////////////////////////////////////////////
-// Just compile and execute. 
-// 
+// Just compile and execute.
+//
 // icc -fast testSpMV_block11.c && ./a.out
 //
 //
 // Input: //////////////////////////////////////////////////////////////////
-// Nothing. Calculation parameters are hard coded. 
-// 
+// Nothing. Calculation parameters are hard coded.
+//
 //
 // Parameter variables: //////////////////////////////////////////////////////////////////
 //
-// nnodes_edge: This variable define the size of problem. 
+// nnodes_edge: This variable define the size of problem.
 //              nnodes_edge^3 is the total dimension of sparse matrix.
 //              (number of non-zero elements on the matrix is given by mimic stiffness matrix)
 //
 //
-// itermax:     This variable define how many times SpMV is calculated. 
-// 
+// itermax:     This variable define how many times SpMV is calculated.
+//
 //
 // Output: /////////////////////////////////////////////////////////////////////////////
 //
 // Followings are outputted in stdout.
-// 
+//
 //                                                               // comment
 // nne   128                                                     // number of nodes per edge
 // nne2  16384                                                   // nne^2
@@ -38,16 +38,16 @@
 // ncols 2097152                                                 // number of columns of sparse matrix (nne^3)
 // nnz 55742968                                                  // number of non-zero elements in sparse matrix
 // CLOCKS_PER_SEC 1000000                                        // constant for clock function
-// user time for count number of non-zero element (sec) 0.050000 
-// user time for create irow jcol matrix (sec) 0.200000 
+// user time for count number of non-zero element (sec) 0.050000
+// user time for create irow jcol matrix (sec) 0.200000
 // now making CRS format
-// user time for create CRS matrix (sec) 0.310000 
-// user time for create vector B (sec) 0.000000 
+// user time for create CRS matrix (sec) 0.310000
+// user time for create vector B (sec) 0.000000
 // now doing SpMV calculation 50 times
 // user time for SpMV (sec) 4.170000                             // This line gives SpMV calculation time in sec.
 // test: now write y vector
 // 4798.080000                                      // y vector of Ab=y calculation (50th iteration) is shown.
-// 7197.120000                                      // It prevent compiler optimization of iter loop and 
+// 7197.120000                                      // It prevent compiler optimization of iter loop and
 // 7197.120000                                      // useful to check calculation result.
 // 7197.120000
 // 7197.120000
@@ -115,7 +115,7 @@ main()
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // create matrix A
-// 
+//
 
 nne  = nnodes_edge;
 nne2 = nnodes_edge * nnodes_edge;
@@ -131,7 +131,7 @@ printf("nrows %d\n",nrows ); //DEBUG
 printf("ncols %d\n",ncols ); //DEBUG
 
 // count number of non zero elements
-nnz=0; 
+nnz=0;
 
 t1 = clock(); // TIMER
 
@@ -787,9 +787,9 @@ sec += (double)(t2 - t1) / CLOCKS_PER_SEC ; // TIME
 }
 printf("user time for SpMV (sec) %f \n", sec); // TIME
 
-printf("test: now write y vector\n"); // DEBUG
-for (i=1; i<=nrows; i++){ // DEBUG
-  printf("%f\n",y[i]); // DEBUG
-} // DEBUG
+//printf("test: now write y vector\n"); // DEBUG
+//for (i=1; i<=nrows; i++){ // DEBUG
+//  printf("%f\n",y[i]); // DEBUG
+//} // DEBUG
 
 }
