@@ -58,6 +58,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <mpi.h>
 
 // #include "omp.h"
 
@@ -76,6 +77,9 @@ main()
   int i,j,k;
   int iter;
 
+  // for mpi
+  int argc, myid, numprocs;
+  char argv;
 
 // SpMV iteration times
   itermax = 50; // numbr of SpMV
@@ -791,5 +795,7 @@ printf("user time for SpMV (sec) %f \n", sec); // TIME
 //for (i=1; i<=nrows; i++){ // DEBUG
 //  printf("%f\n",y[i]); // DEBUG
 //} // DEBUG
+
+MPI_Finalize();
 
 }
