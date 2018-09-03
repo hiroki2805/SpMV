@@ -15,7 +15,7 @@ program mesh
 
   open(20,file="mesh.msh")
 
-  write(20,'(2(I8,1X))') nelem, 3
+  write(20,'(I8)') nelem
 
   do k = 1, nne-1
     do j = 1, nne-1
