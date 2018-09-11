@@ -12,6 +12,7 @@ subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
   real(kind(0d0)) :: xnode, ynode, znode
 
   integer, allocatable :: eptr(:), eind(:)
+  integer :: ijk
 
   character :: filename*20
 
@@ -44,8 +45,28 @@ subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
   ! ここにmesh data の arrayを作成 eind eptr必要
   ! eind : 16,387,064 (127*127*127*8)のはず
 
+  allocate(eptr(nelem+1),eind(nelem*8))
+
+  ! ここをeindにする
+  do k = 1, nne-1
+    do j = 1, nne-1
+      do i = 1, nne-1
+        ijk = (i-1)*8 + (j-1)*(nne-1)*8 + (k-1)*(nne-1)*(nne-1)*8
+        eind(ijk+1) = i+nne*(j-1)+nne*nne*(k-1)
+        eind(ijk+2) = eind(ijk+1) + 1
+        eind(ijk+3) = eind(ijk+2) + nne
+        eind(ijk+4) = eind(ijk+3) - 1
+        eind(ijk+5) = eind(ijk+1) + nne*nne
+        eind(ijk+6) = eind(ijk+5) + 1
+        eind(ijk+7) = eind(ijk+6) + nne
+        eind(ijk+8) = eind(ijk+7) - 1
+      end do
+    end do
+  end do
 
 
+
+  deallocate(eptr,eind)
 
   ! ----------------------------------------------------------------------------
 
