@@ -16,34 +16,7 @@ subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
 
   character :: filename*20
 
-  ! ----------------------------------------------------------------------------
-
-  open(20,file="mesh.msh")
-
-  write(20,'(I8)') nelem
-
-  do k = 1, nne-1
-    do j = 1, nne-1
-      do i = 1, nne-1
-        eleno(1) = i+nne*(j-1)+nne*nne*(k-1)
-        eleno(2) = eleno(1) + 1
-        eleno(3) = eleno(2) + nne
-        eleno(4) = eleno(3) - 1
-        eleno(5) = eleno(1) + nne*nne
-        eleno(6) = eleno(5) + 1
-        eleno(7) = eleno(6) + nne
-        eleno(8) = eleno(7) - 1
-        write(20,'(8(I8,1X))')  (eleno(l),l=1,8)
-      end do
-    end do
-  end do
-
-  close(20)
-
-  ! ----------------------------------------------------------------------------
-
-  ! ここにmesh data の arrayを作成 eind eptr必要
-  ! eind : 16,387,064 (127*127*127*8)のはず
+  ! -------------------------- Mesh Gen ----------------------------------------
 
   allocate(eptr(nelem+1),eind(nelem*8))
 
@@ -52,7 +25,6 @@ subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
   do i = 1, nelem
     eptr(i+1) = 8*i
   end do
-
 
   ! make eind array
   do k = 1, nne-1
@@ -70,6 +42,12 @@ subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
       end do
     end do
   end do
+
+  ! -------------------------- Mesh Partitioning -------------------------------
+
+  ! call Metis
+
+
 
 
 
