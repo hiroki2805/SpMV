@@ -47,7 +47,14 @@ subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
 
   allocate(eptr(nelem+1),eind(nelem*8))
 
-  ! ここをeindにする
+  ! make eptr array
+  eptr(1) = 0
+  do i = 1, nelem
+    eptr(i+1) = 8*i
+  end do
+
+
+  ! make eind array
   do k = 1, nne-1
     do j = 1, nne-1
       do i = 1, nne-1
