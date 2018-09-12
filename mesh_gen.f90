@@ -1,7 +1,8 @@
 subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
   implicit none
+  include "metis.h"
 
-  integer :: i, j, k, l, n
+  integer :: i, j, k, l
 
   integer, intent(in) :: PETOT, my_rank
 
@@ -12,6 +13,8 @@ subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
   real(kind(0d0)) :: xnode, ynode, znode
 
   integer, allocatable :: eptr(:), eind(:)
+  integer, allocatable :: epart(:), npart(:)
+  integer :: objval
   integer :: ijk
 
   character :: filename*20
@@ -46,26 +49,25 @@ subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
   ! -------------------------- Mesh Partitioning -------------------------------
 
   ! call Metis
+  allocate(epart(nelem),npart(nnode))
+  call METIS_PartMeshDual(nelem,nnode,eptr,eind,NULL,NULL,4,PETOT,NULL,objval,epart,npart)
 
 
 
 
 
   deallocate(eptr,eind)
+  deallocate(epart,npart)
 
   ! ----------------------------------------------------------------------------
 
-  n = PETOT
-
-  write(filename,*) n
+  write(filename,*) PETOT
 
   filename='mesh.msh.epart.'//trim(adjustl(filename))
 
   ! write(*,*) filename
 
   ! ----------------------------------------------------------------------------
-
-  ! サブルーチン呼び出しにしていきたい
 
   ! ----------------------------------------------------------------------------
 
