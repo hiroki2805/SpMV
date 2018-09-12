@@ -10,3 +10,4 @@
 *.msh*
 *.inp*
 *.png
+!Makefile
