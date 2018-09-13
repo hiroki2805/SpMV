@@ -1,6 +1,5 @@
 subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
   implicit none
-  include "metis.h"
 
   integer :: i, j, k, l
 
@@ -15,6 +14,7 @@ subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
   integer, allocatable :: eptr(:), eind(:)
   integer, allocatable :: epart(:), npart(:)
   integer :: objval
+  integer :: vwgt, vsize, tpwgts, options
   integer :: ijk
 
   character :: filename*20
@@ -50,11 +50,8 @@ subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
 
   ! call Metis
   allocate(epart(nelem),npart(nnode))
-  call METIS_PartMeshDual(nelem,nnode,eptr,eind,NULL,NULL,4,PETOT,NULL,objval,epart,npart)
-
-
-
-
+  call METIS_PartMeshNodal(nelem,nnode,eptr,eind,vwgt,vsize,PETOT,tpwgts,options,objval,epart,npart)
+  write(*,*) epart(1:10)
 
   deallocate(eptr,eind)
   deallocate(epart,npart)
@@ -71,60 +68,60 @@ subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
 
   ! ----------------------------------------------------------------------------
 
-  open(21,file='part.inp')
+  !open(21,file='part.inp')
 
-  write(21,'(5(I8,1X))') nnode, nelem, 0, 1, 0
+  !write(21,'(5(I8,1X))') nnode, nelem, 0, 1, 0
 
-  count = 0
+  !count = 0
 
-  do k = 1, nne
-    do j = 1, nne
-      do i = 1, nne
-        count = count + 1
-        xnode = 0.0d0 + 1.0d-3*dble(i-1)
-        ynode = 0.0d0 + 1.0d-3*dble(j-1)
-        znode = 0.0d0 + 1.0d-3*dble(k-1)
-        write(21,'((I8,1X),3(E17.8,1X))') count, xnode, ynode, znode
-      end do
-    end do
-  end do
+  !do k = 1, nne
+  !  do j = 1, nne
+  !    do i = 1, nne
+  !      count = count + 1
+  !      xnode = 0.0d0 + 1.0d-3*dble(i-1)
+  !      ynode = 0.0d0 + 1.0d-3*dble(j-1)
+  !      znode = 0.0d0 + 1.0d-3*dble(k-1)
+  !      write(21,'((I8,1X),3(E17.8,1X))') count, xnode, ynode, znode
+  !    end do
+  !  end do
+  !end do
 
 
-  count = 0
+  !count = 0
 
-  do k = 1, nne-1
-    do j = 1, nne-1
-      do i = 1, nne-1
-        count = count + 1
-        eleno(1) = i+nne*(j-1)+nne*nne*(k-1)
-        eleno(2) = eleno(1) + 1
-        eleno(3) = eleno(2) + nne
-        eleno(4) = eleno(3) - 1
-        eleno(5) = eleno(1) + nne*nne
-        eleno(6) = eleno(5) + 1
-        eleno(7) = eleno(6) + nne
-        eleno(8) = eleno(7) - 1
-        write(21,'(2(I8,1X),(A5,1X),8(I8,1X))') count, 1, " hex", (eleno(l),l=1,8)
-      end do
-    end do
-  end do
+  !do k = 1, nne-1
+  !  do j = 1, nne-1
+  !    do i = 1, nne-1
+  !      count = count + 1
+  !      eleno(1) = i+nne*(j-1)+nne*nne*(k-1)
+  !      eleno(2) = eleno(1) + 1
+  !      eleno(3) = eleno(2) + nne
+  !      eleno(4) = eleno(3) - 1
+  !      eleno(5) = eleno(1) + nne*nne
+  !      eleno(6) = eleno(5) + 1
+  !      eleno(7) = eleno(6) + nne
+  !      eleno(8) = eleno(7) - 1
+  !      write(21,'(2(I8,1X),(A5,1X),8(I8,1X))') count, 1, " hex", (eleno(l),l=1,8)
+  !    end do
+  !  end do
+  !end do
 
-  write(21,'(2(I8,1X))') 1, 1
-  write(21,'(A)') "ELEMENT, "
+  !write(21,'(2(I8,1X))') 1, 1
+  !write(21,'(A)') "ELEMENT, "
 
   ! ----------------------------------------------------------------------------
 
-  open(30,file=filename)
+  !open(30,file=filename)
 
-  count = 0
-  do i = 1, nelem
-    count = count + 1
-    read(30,*) elem
-    write(21,*) count, elem
-  end do
+  !count = 0
+  !do i = 1, nelem
+  !  count = count + 1
+  !  read(30,*) elem
+  !  write(21,*) count, elem
+  !end do
 
-  close(21)
-  close(30)
+  !close(21)
+  !close(30)
 
   ! ----------------------------------------------------------------------------
 
