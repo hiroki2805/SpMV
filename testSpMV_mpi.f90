@@ -74,4 +74,4 @@ subroutine testSpMV_block11_mpi(itermax,nne,nelem,nnode,mev,vev,PETOT,my_rank)
 
 
 
-end subroutine testSpMV_block11_mpi()
+end subroutine testSpMV_block11_mpi
