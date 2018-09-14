@@ -11,11 +11,16 @@ subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
   integer :: count, elem
   real(kind(0d0)) :: xnode, ynode, znode
 
+  ! for metis
   integer, allocatable :: eptr(:), eind(:)
   integer, allocatable :: epart(:), npart(:)
   integer :: objval
-  integer :: vwgt, vsize, tpwgts, options
+  integer, allocatable :: vwgt(:), vsize(:), tpwgts(:), options(:)
   integer :: ijk
+
+  integer :: par_count
+  integer, allocatable :: connect_par(:,:)
+  integer :: prev_no
 
   character :: filename*20
 
@@ -51,16 +56,50 @@ subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
   ! call Metis
   allocate(epart(nelem),npart(nnode))
   call METIS_PartMeshNodal(nelem,nnode,eptr,eind,vwgt,vsize,PETOT,tpwgts,options,objval,epart,npart)
-  write(*,*) epart(1:10)
+
+  ! count number of element
+  par_count = 0
+  do i = 1, nelem
+    if ( epart(i) == my_rank ) then
+      par_count = par_count + 1
+    end if
+  end do
+
+  ! make PartMesh
+  allocate(connect_par(par_count,8))
+  par_count = 0
+  do i = 1, nelem
+    if ( epart(i) == my_rank ) then
+      par_count = par_count + 1
+      do j = 1, 8
+        connect_par(par_count,j) = eind((i-1)*8+j)
+      end do
+    end if
+  end do
 
   deallocate(eptr,eind)
   deallocate(epart,npart)
 
+  ! reset element number
+  prev_no = 1
+  do i = 1, par_count
+    do j = 1, 8
+      if ( connect_par(i,j) == prev_no ) then
+
+      end if
+    end do
+    if ( condition ) then
+
+    end if
+  end do
+
+  deallocate(connect_par)
+
   ! ----------------------------------------------------------------------------
 
-  write(filename,*) PETOT
+  !write(filename,*) PETOT
 
-  filename='mesh.msh.epart.'//trim(adjustl(filename))
+  !filename='mesh.msh.epart.'//trim(adjustl(filename))
 
   ! write(*,*) filename
 
