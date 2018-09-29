@@ -1,7 +1,7 @@
 subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
   implicit none
 
-  integer :: i, j, k, l
+  integer :: i, j, k, l, m
 
   integer, intent(in) :: PETOT, my_rank
 
@@ -81,16 +81,27 @@ subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
   deallocate(epart,npart)
 
   ! reset element number
-  prev_no = 1
-  do i = 1, par_count
-    do j = 1, 8
-      if ( connect_par(i,j) == prev_no ) then
+  prev_no = 0
+  do i = 1, nnode
+    elemdo : do j = 1, par_count
+      do k = 1, 8
+        if ( (i == prev_no + 1) .and. (connect_par(j,k) == i) ) then
+          prev_no = i
+          exit elemdo
+        end if
+        if (( i > prev_no + 1 ) .and. (connect_par(j,k) == i) )then
+          do l = 1, par_count
+            do m = 1, 8
+              if ( connect_par(l,m) == i ) then
+                connect_par(l,m) = prev_no + 1
+              end if
+            end do
+          end do
+          prev_no = prev_no + 1
+        end if
+      end do
+    end do elemdo
 
-      end if
-    end do
-    if ( condition ) then
-
-    end if
   end do
 
   deallocate(connect_par)
