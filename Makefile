@@ -1,5 +1,5 @@
 TARGET = spmv_main
-OBJECTS = spmv_main.o mesh_gen.o testSpMV_mpi.o
+OBJECTS = spmv_main.o mesh_gen.o sort.f90 testSpMV_mpi.o
 FC = mpifort
 #FC = mpiifort
 

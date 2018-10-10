@@ -1,10 +1,10 @@
 subroutine heapsort(n,array)
   implicit none
   integer,intent(in) :: n
-  double precision,intent(inout) :: array(1:n)
+  integer,intent(inout) :: array(1:n)
 
   integer ::i,k,j,l
-  double precision :: t
+  integer :: t
 
   if(n.le.0)then
      write(6,*)"Error, at heapsort"; stop
