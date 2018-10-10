@@ -81,28 +81,28 @@ subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
   deallocate(epart,npart)
 
   ! reset element number
-  prev_no = 0
-  do i = 1, nnode
-    elemdo : do j = 1, par_count
-      do k = 1, 8
-        if ( (i == prev_no + 1) .and. (connect_par(j,k) == i) ) then
-          prev_no = i
-          exit elemdo
-        end if
-        if (( i > prev_no + 1 ) .and. (connect_par(j,k) == i) )then
-          do l = 1, par_count
-            do m = 1, 8
-              if ( connect_par(l,m) == i ) then
-                connect_par(l,m) = prev_no + 1
-              end if
-            end do
-          end do
-          prev_no = prev_no + 1
-        end if
-      end do
-    end do elemdo
+  !prev_no = 0
+  !do i = 1, nnode
+  !  elemdo : do j = 1, par_count
+  !    do k = 1, 8
+  !      if ( (i == prev_no + 1) .and. (connect_par(j,k) == i) ) then
+  !        prev_no = i
+  !        exit elemdo
+  !      end if
+  !      if (( i > prev_no + 1 ) .and. (connect_par(j,k) == i) )then
+  !        do l = 1, par_count
+  !          do m = 1, 8
+  !            if ( connect_par(l,m) == i ) then
+  !              connect_par(l,m) = prev_no + 1
+  !            end if
+  !          end do
+  !        end do
+  !        prev_no = prev_no + 1
+  !      end if
+  !    end do
+  !  end do elemdo
 
-  end do
+  !end do
 
   deallocate(connect_par)
 
