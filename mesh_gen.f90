@@ -20,6 +20,9 @@ subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
 
   integer :: par_count
   integer, allocatable :: connect_par(:,:)
+
+  integer, allocatable :: val_loc(:)
+
   integer :: prev_no
 
   character :: filename*20
@@ -80,6 +83,30 @@ subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
   deallocate(eptr,eind)
   deallocate(epart,npart)
 
+  !! Make CRS
+  ! 要素のある場所の配列
+  allocate(val_loc(8*8*par_count))
+  do i = 1, par_count
+    do j = 1, 8
+      do k = 1, 8
+        ijk = (par_count-1)*i + (j-1)*8 + k
+        val_loc(ijk) = (connect_par(i,j)-1)*nnode + connect_par(i,k)
+      end do
+    end do
+  end do
+  deallocate(connect_par)
+
+  ! sort
+  call heapsort(8*8*par_count,val_loc)
+
+  ! Make CRS
+  !do i = 1,
+
+  !end do
+
+
+
+
   ! reset element number
   !prev_no = 0
   !do i = 1, nnode
@@ -103,8 +130,6 @@ subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
   !  end do elemdo
 
   !end do
-
-  deallocate(connect_par)
 
   ! ----------------------------------------------------------------------------
 
