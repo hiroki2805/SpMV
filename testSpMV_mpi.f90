@@ -52,7 +52,7 @@
 ! 7197.120000
 ! 7197.120000
 ! ..
-subroutine testSpMV_block11_mpi(itermax,nne,nelem,nnode,mev,vev,PETOT,my_rank)
+subroutine testSpMV_block11_mpi(itermax,nne,nelem,nnode,mev,vev,PETOT,my_rank,crs_col,crs_row,crs_count)
   implicit none
 
   integer :: x1, y1, z1
@@ -63,6 +63,8 @@ subroutine testSpMV_block11_mpi(itermax,nne,nelem,nnode,mev,vev,PETOT,my_rank)
   integer, intent(in) :: PETOT, my_rank
 
   real(kind(0d0)), intent(in) :: mev, vev
+
+  integer, intent(in) :: crs_col(crs_count), crs_row(nnode+1), crs_count
 
   integer :: i, j, k
   integer :: iter

@@ -51,7 +51,7 @@ program spmv_main
 
   ! ------------------------ SpMV (MPI) -----------------------------
 
-  call testSpMV_block11_mpi(itermax,nne,nelem,nnode,mev,vev,PETOT,my_rank)
+  call testSpMV_block11_mpi(itermax,nne,nelem,nnode,mev,vev,PETOT,my_rank,crs_col,crs_row,crs_count)
 
   ! -----------------------------------------------------------------
 

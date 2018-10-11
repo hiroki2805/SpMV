@@ -16,7 +16,7 @@ subroutine heapsort(n,array)
   do while(k.ne.1)
      if(l.gt.1)then
         l=l-1
-        t=array(L)
+        t=array(l)
      else
         t=array(k)
         array(k)=array(1)

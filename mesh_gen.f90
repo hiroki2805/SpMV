@@ -1,4 +1,4 @@
-subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
+subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank,crs_col,crs_row,crs_count)
   implicit none
 
   integer :: i, j, k, l, m
@@ -23,7 +23,10 @@ subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
 
   integer, allocatable :: val_loc(:)
 
-  integer :: prev_no
+  integer, allocatable :: crs_col(:), crs_row(:)
+  integer :: crs_count
+
+  integer :: prev_no, prev_row
 
   character :: filename*20
 
@@ -100,9 +103,33 @@ subroutine mesh_gen(nne,nelem,nnode,PETOT,my_rank)
   call heapsort(8*8*par_count,val_loc)
 
   ! Make CRS
-  !do i = 1,
+  crs_count = 0
+  prev_no = 0
+  do i = 1, 8*8*par_count
+    if ( val_loc(i) > prev_no ) then
+      crs_count = crs_count + 1
+      prev_no = val_loc(i)
+    end if
+  end do
+  allocate(crs_col(crs_count),crs_row(nnode+1))
 
-  !end do
+  crs_count = 0
+  prev_no = 0
+  prev_row = 1
+  crs_row(1) = 1
+  do i = 1, 8*8*par_count
+    if ( val_loc(i) > prev_no ) then
+      crs_count = crs_count + 1
+      prev_no = val_loc(i)
+      crs_col(crs_count) = mod(val_loc(i),nnode)
+      if ( val_loc(i) > nnode*prev_row ) then
+        crs_row(prev_row + 1) = crs_count
+        prev_row = prev_row + 1
+      end if
+    end if
+  end do
+  crs_row(nnode) = crs_count
+
 
 
 
